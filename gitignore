@@ -1,0 +1,13 @@
+# Python environment
+.venv/
+__pycache__/
+*.pyc
+
+# Data: raw files are re-downloaded by load_secom.py; the database is rebuilt from them
+data/*.data
+data/*.db
+
+# Editor / OS
+.vscode/
+.DS_Store
+Thumbs.db
