@@ -1,18 +1,4 @@
-"""
-Day 2 — Statistical Process Control (SPC) on the top suspect sensors.
 
-For each sensor, builds an Individuals control chart:
-  - Control limits come from a BASELINE period when the line was healthy (Sep 1–28, 2008, ~3% fail rate).
-  - Every run is then checked against the four Western Electric rules.
-  - Failed runs and out-of-control points are marked so you can see whether they line up.
-
-Outputs:
-  charts/spc_<sensor>.png    one control chart per sensor
-  charts/spc_overview.png    all sensors stacked on one timeline (good README figure)
-  data/spc_summary.csv       per-sensor limits and out-of-control rates by period
-
-Run:  python spc.py
-"""
 import sqlite3
 from pathlib import Path
 
@@ -28,32 +14,26 @@ CHART_DIR = Path("charts")
 
 SENSORS = ["s059", "s103", "s510", "s158", "s431"]
 
-# Periods identified on Day 1 from the weekly fail-rate table
-BASELINE = ("2008-09-01", "2008-09-28 23:59:59")   # healthy line, ~1.5–4% weekly fail rate
+# Periods identified from the weekly fail-rate table
+BASELINE = ("2008-09-01", "2008-09-28 23:59:59")   # healthy line
 PERIODS = {
     "excursion (Jul 19–Aug 24)": ("2008-07-19", "2008-08-24 23:59:59"),
     "baseline (Sep 1–28)":       BASELINE,
     "second spike (Sep 29–Oct 12)": ("2008-09-29", "2008-10-12 23:59:59"),
 }
 
-D2 = 1.128  # constant converting average moving range to sigma for n=2
+D2 = 1.128
 
-# How limits are set. SECOM runs arrive in bursts of near-identical readings (autocorrelation),
-# so the classic moving-range sigma comes out far too small and the limits too tight.
-#   "std" = sigma from the baseline's overall standard deviation (default, robust to bursts)
-#   "mr"  = classic moving-range sigma (textbook I-chart; kept for comparison)
 SIGMA_METHOD = "std"
 
-# Rule 4 (8 in a row on one side) assumes consecutive runs are independent. Bursty data breaks
-# that assumption, so it is off by default and only used in the "textbook" comparison.
 ACTIVE_RULES = (1, 2, 3)
 
-# Sensors to check for moving together (Day 2 finding: both shifted during the excursion)
+# Sensors to check for moving together
 PAIR = ("s059", "s103")
 SERIES_1 = "#2a78d6"
 SERIES_2 = "#eb6834"
 
-# Colors: neutral for normal runs; reserved "critical" red + X shape for failed runs
+# Colours: neutral for normal runs; reserved "critical" red + X shape for failed runs
 SURFACE = "#fcfcfb"
 INK = "#0b0b0b"
 INK_2 = "#52514e"
@@ -61,8 +41,7 @@ PASS_DOT = "#a3a29c"
 FAIL_RED = "#d03b3b"
 BAND = "#f0efec"
 
-
-# ---------------------------------------------------------------- data
+#data analysis
 
 def load(con):
     placeholders = ",".join("?" * len(SENSORS))
@@ -75,8 +54,7 @@ def load(con):
     runs["timestamp"] = pd.to_datetime(runs["timestamp"])
     return runs.join(wide).sort_values("timestamp")
 
-
-# ---------------------------------------------------------------- SPC math
+#SPC
 
 def control_limits(baseline_values, method=SIGMA_METHOD):
     """Individuals chart limits: center = baseline mean, sigma by the chosen method."""
@@ -90,13 +68,6 @@ def control_limits(baseline_values, method=SIGMA_METHOD):
 
 
 def western_electric(z, rules=ACTIVE_RULES):
-    """
-    Return a boolean array: True where a point breaks any of the selected Western Electric rules.
-      Rule 1: one point beyond 3 sigma
-      Rule 2: 2 of 3 consecutive points beyond 2 sigma on the same side
-      Rule 3: 4 of 5 consecutive points beyond 1 sigma on the same side
-      Rule 4: 8 consecutive points on the same side of the center line
-    """
     n = len(z)
     flag = (np.abs(z) > 3) if 1 in rules else np.zeros(n, dtype=bool)
 
@@ -138,8 +109,7 @@ def analyze(df, sensor, method=SIGMA_METHOD, rules=ACTIVE_RULES):
     stats["fail rate when in control %"] = round(failed[~ooc].mean() * 100, 1)
     return series, stats
 
-
-# ---------------------------------------------------------------- charts
+#Chart representation
 
 def shade_periods(ax, label=True):
     ymax = ax.get_ylim()[1]
@@ -213,7 +183,7 @@ def overview_chart(results):
     plt.close(fig)
 
 
-# ---------------------------------------------------------------- do the suspects move together?
+#correlation of sensors graphed
 
 def comovement(df):
     """Correlation between suspect sensors, and a daily view of the PAIR on a shared z-score scale."""
@@ -228,7 +198,7 @@ def comovement(df):
     daily["fail_rate_%"] = (df["result"].eq("fail")
                             .groupby(df["timestamp"].dt.floor("D")).mean() * 100).round(1)
 
-    # Chart: both sensors as baseline z-scores (same unit, so one shared axis is honest)
+    #Chart
     fig, ax = plt.subplots(figsize=(12, 4.2), facecolor=SURFACE)
     ax.set_facecolor(SURFACE)
     for s_, color in zip(PAIR, (SERIES_1, SERIES_2)):
@@ -254,8 +224,7 @@ def comovement(df):
     plt.close(fig)
     return corr, daily
 
-
-# ---------------------------------------------------------------- main
+#main
 
 if __name__ == "__main__":
     CHART_DIR.mkdir(exist_ok=True)
@@ -278,7 +247,7 @@ if __name__ == "__main__":
     print(f"=== Out-of-control (OOC) rate by period  [sigma={SIGMA_METHOD}, rules={ACTIVE_RULES}] ===")
     print(summary[cols].to_string(index=False))
 
-    # Before/after: how much did the limit fix change the false-alarm rate in the healthy baseline?
+    #Post fix calculations
     base_col = "% OOC baseline (Sep 1–28)"
     exc_col = "% OOC excursion (Jul 19–Aug 24)"
     textbook = pd.DataFrame([analyze(df, s_, method="mr", rules=(1, 2, 3, 4))[1] for s_ in SENSORS])
