@@ -1,13 +1,3 @@
-"""
-Day 1 — Load the UCI SECOM semiconductor dataset into SQLite.
-
-Creates data/secom.db with three tables:
-  runs          one row per production run (timestamp, pass/fail)
-  measurements  one row per (run, sensor) reading  -> ~925k rows, NULL = missing
-  sensors       one row per sensor with data-quality stats (missing %, constant, etc.)
-
-Run:  python load_secom.py
-"""
 import sqlite3
 import urllib.request
 from pathlib import Path
@@ -59,9 +49,6 @@ def build_tables(features, labels):
         "timestamp": labels["timestamp"].dt.strftime("%Y-%m-%d %H:%M:%S"),
         "result": labels["label"].map({-1: "pass", 1: "fail"}),
     })
-
-    # Long format: one row per reading. Missing readings stay as NULL on purpose —
-    # which sensors drop out, and when, can itself be a clue.
     wide = features.copy()
     wide.insert(0, "run_id", run_ids)
     measurements = wide.melt(id_vars="run_id", var_name="sensor", value_name="value")

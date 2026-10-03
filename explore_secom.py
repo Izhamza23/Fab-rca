@@ -1,12 +1,3 @@
-"""
-Day 1 (part 2) — Which sensors separate passing runs from failing runs?
-
-Reads data/secom.db (built by load_secom.py) and writes:
-  data/sensor_ranking.csv   every usable sensor ranked by how differently it behaves on failed runs
-  data/fails_by_week.csv    failure counts per week (do failures cluster in time?)
-
-Run:  python explore_secom.py
-"""
 import sqlite3
 from pathlib import Path
 
@@ -16,7 +7,6 @@ DB_PATH = Path("data") / "secom.db"
 
 
 def load_wide(con):
-    """Pivot the long measurements table back into one row per run, one column per sensor."""
     meas = pd.read_sql("SELECT run_id, sensor, value FROM measurements", con)
     wide = meas.pivot(index="run_id", columns="sensor", values="value")
     runs = pd.read_sql("SELECT run_id, timestamp, result FROM runs", con).set_index("run_id")
