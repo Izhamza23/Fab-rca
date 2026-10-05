@@ -269,3 +269,5 @@ if __name__ == "__main__":
     print(f"\n=== Daily median z-scores for {PAIR[0]} and {PAIR[1]}, Aug 18–Sep 3 (look for the step) ===")
     print(daily.loc["2008-08-18":"2008-09-03"].round(2).to_string())
     print(f"\nCharts saved to {CHART_DIR.resolve()}")
+
+pd.read_sql("SELECT COUNT(*) FROM measurements", con)
