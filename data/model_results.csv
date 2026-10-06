@@ -1,0 +1,6 @@
+model,test method,test runs,test fails,ROC AUC,PR AUC,PR AUC 95% range,runs flagged,failures caught (recall %),flags that were real fails (precision %),caught / total fails,false alarms
+Random guessing,time-ordered split,471,26,0.5,0.066,0.045–0.113,45,11.5,6.7,3/26,42
+Logistic regression,random 5-fold CV,1567,104,0.658,0.125,,157,23.1,15.3,24/104,133
+Logistic regression,time-ordered split,471,26,0.588,0.067,0.042–0.107,8,0.0,0.0,0/26,8
+Gradient boosting,random 5-fold CV,1567,104,0.712,0.175,,157,27.9,18.5,29/104,128
+Gradient boosting,time-ordered split,471,26,0.567,0.067,0.043–0.114,7,0.0,0.0,0/26,7

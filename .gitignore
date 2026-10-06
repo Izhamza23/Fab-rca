@@ -11,3 +11,6 @@ data/*.db
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Local tutor instructions for Claude Code
+CLAUDE.md

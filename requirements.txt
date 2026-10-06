@@ -5,3 +5,5 @@ six==1.17.0
 tzdata==2026.4
 matplotlib==3.11.2
 scikit-learn==1.9.1
+shap==0.52.0
+streamlit==1.65.0

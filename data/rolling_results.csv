@@ -1,0 +1,11 @@
+model,test period,train runs,test fails,random PR AUC (fail rate),PR AUC,lift over random,ROC AUC
+Logistic regression,Aug 18 – Aug 29,262,22,0.084,0.088,1.04,0.514
+Logistic regression,Aug 29 – Sep 11,523,6,0.023,0.115,5.0,0.574
+Logistic regression,Sep 11 – Sep 23,784,10,0.038,0.122,3.2,0.609
+Logistic regression,Sep 23 – Oct 05,1045,13,0.05,0.047,0.95,0.469
+Logistic regression,Oct 05 – Oct 17,1306,14,0.054,0.232,4.32,0.786
+Gradient boosting,Aug 18 – Aug 29,262,22,0.084,0.094,1.12,0.543
+Gradient boosting,Aug 29 – Sep 11,523,6,0.023,0.046,1.99,0.405
+Gradient boosting,Sep 11 – Sep 23,784,10,0.038,0.377,9.85,0.622
+Gradient boosting,Sep 23 – Oct 05,1045,13,0.05,0.06,1.21,0.529
+Gradient boosting,Oct 05 – Oct 17,1306,14,0.054,0.089,1.67,0.571

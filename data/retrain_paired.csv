@@ -1,0 +1,17 @@
+model,strategy,metric,difference,95% interval,excludes 0,better in % of resamples
+Logistic regression,"weekly, expanding",recall %,5.15,"[-3.28, +13.24]",no,86
+Logistic regression,"weekly, expanding",precision lift,1.21,"[+0.13, +2.35]",yes,99
+Logistic regression,"weekly, expanding",weekly PR lift,0.62,"[-2.08, +2.57]",no,74
+Logistic regression,"weekly, expanding",spike caught,1.01,"[+0.00, +3.00]",no,63
+Logistic regression,"weekly, sliding 4 wk",recall %,5.13,"[-3.13, +13.80]",no,87
+Logistic regression,"weekly, sliding 4 wk",precision lift,0.91,"[-0.05, +2.11]",no,97
+Logistic regression,"weekly, sliding 4 wk",weekly PR lift,-0.19,"[-2.96, +1.40]",no,52
+Logistic regression,"weekly, sliding 4 wk",spike caught,3.97,"[+0.00, +10.00]",no,94
+Gradient boosting,"weekly, expanding",recall %,-5.12,"[-10.45, +0.03]",no,2
+Gradient boosting,"weekly, expanding",precision lift,-1.28,"[-4.00, +2.31]",no,20
+Gradient boosting,"weekly, expanding",weekly PR lift,1.36,"[-0.30, +3.65]",no,94
+Gradient boosting,"weekly, expanding",spike caught,-1.96,"[-5.00, +0.00]",no,0
+Gradient boosting,"weekly, sliding 4 wk",recall %,-1.24,"[-6.67, +4.92]",no,24
+Gradient boosting,"weekly, sliding 4 wk",precision lift,-0.39,"[-2.51, +1.81]",no,34
+Gradient boosting,"weekly, sliding 4 wk",weekly PR lift,1.13,"[-0.49, +4.24]",no,87
+Gradient boosting,"weekly, sliding 4 wk",spike caught,0.99,"[-2.00, +5.00]",no,60
